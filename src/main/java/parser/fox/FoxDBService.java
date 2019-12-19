@@ -65,7 +65,13 @@ public class FoxDBService {
         fits.forEach(foxFit -> {
             FoxItem item = foxFit.getItem();
             if (item.getItemID()==0){
-                saveItem(item, session);
+                try {
+                    item = FoxItemDAO.getItemByPartNo(session, item.getPartNo());
+                }
+                catch (NoResultException e){
+                    saveItem(item, session);
+                }
+
             }
         });
     }
