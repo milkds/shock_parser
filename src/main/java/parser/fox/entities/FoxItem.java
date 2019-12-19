@@ -2,6 +2,7 @@ package parser.fox.entities;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -113,5 +114,18 @@ public class FoxItem {
     }
     public void setFitments(Set<FoxFit> fitments) {
         this.fitments = fitments;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof FoxItem)) return false;
+        FoxItem item = (FoxItem) o;
+        return getPartNo().equals(item.getPartNo());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getPartNo());
     }
 }
