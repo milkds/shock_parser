@@ -58,7 +58,7 @@ public class FoxSiteSurfer {
                 int attempts = 0;
                 while (true){
                     try {
-                        new MakeParser(makeID, driver, makeBy, year).parseMake();
+                        new MakeParser(j, driver, makeBy, year).parseMake();
                         break;
                     }
                     catch (TimeoutException e){

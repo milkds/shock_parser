@@ -29,9 +29,7 @@ public class MakeParser {
         By modelBy = By.id(modelElementID);
         SileniumUtil.selectOptionByOptionID(makeID, makeBy, driver); //selecting make at make dropDown
         SileniumUtil.waitForSelectBy(driver, modelBy); //waiting for model dropdown to become active
-
         Session session = HibernateUtil.getFoxSessionFactory().openSession();
-
         int attempts = 0;
         Set<FoxCar> makeCars = null;
         while (true){
