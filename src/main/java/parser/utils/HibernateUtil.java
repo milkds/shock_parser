@@ -6,6 +6,7 @@ import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import parser.eibach.entiities.EibPage;
 import parser.fox.entities.FoxCar;
 import parser.fox.entities.FoxFit;
 import parser.fox.entities.FoxItem;
@@ -45,6 +46,43 @@ public class HibernateUtil {
                 sources.addAnnotatedClass(FoxFit.class);
                 sources.addAnnotatedClass(FoxItem.class);
                 sources.addAnnotatedClass(FoxItemSpec.class);
+                Metadata metadata = sources.getMetadataBuilder().build();
+
+                sessionFactory = metadata.getSessionFactoryBuilder().build();
+            } catch (Exception e) {
+                System.out.println("SessionFactory creation failed");
+                e.printStackTrace();
+                if (registry != null) {
+                    StandardServiceRegistryBuilder.destroy(registry);
+                }
+            }
+        }
+        return sessionFactory;
+    }
+    public static SessionFactory getEibSessionFactory() {
+        if (sessionFactory == null) {
+            try {
+                StandardServiceRegistryBuilder registryBuilder =
+                        new StandardServiceRegistryBuilder();
+
+                Map<String, String> settings = new HashMap<>();
+                settings.put("hibernate.connection.driver_class", "com.mysql.cj.jdbc.Driver");
+                settings.put("hibernate.connection.url", "jdbc:mysql://localhost:3306/eibach?useUnicode=true&" +
+                        "useJDBCCompliantTimezoneShift=true&" +
+                        "useLegacyDatetimeCode=false&" +
+                        "serverTimezone=UTC&" +
+                        "useSSL=false");
+                settings.put("hibernate.connection.username", "root");
+                settings.put("hibernate.connection.password", "root");
+                settings.put("hibernate.show_sql", "true");
+                settings.put("hibernate.hbm2ddl.auto", "none");
+
+                registryBuilder.applySettings(settings);
+
+                registry = registryBuilder.build();
+
+                MetadataSources sources = new MetadataSources(registry);
+                sources.addAnnotatedClass(EibPage.class);
                 Metadata metadata = sources.getMetadataBuilder().build();
 
                 sessionFactory = metadata.getSessionFactoryBuilder().build();

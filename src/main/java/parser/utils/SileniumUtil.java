@@ -126,7 +126,7 @@ public class SileniumUtil {
     public static WebElement waitForElementPresent(WebDriver driver, By by, int seconds) {
         WebElement result = new FluentWait<>(driver)
                 .withTimeout(Duration.ofSeconds(seconds))
-                .pollingEvery(Duration.ofMillis(50))
+                .pollingEvery(Duration.ofMillis(1000))
                 .ignoring(WebDriverException.class)
                 .until(ExpectedConditions.presenceOfElementLocated(by));
 
