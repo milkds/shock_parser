@@ -1,9 +1,6 @@
 package parser.eibach;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.*;
 import parser.utils.BasicUtils;
 import parser.utils.SileniumUtil;
 
@@ -40,7 +37,21 @@ class EibPageSaver {
     }
 
     private void openPage() {
-        driver.get(url);
+        if (driver.getCurrentUrl().contains("eibach")){
+            WebElement checkEl = driver.findElement(By.className("main-logo"));
+            driver.get(url);
+            while (true){
+                try {
+                    checkEl.isDisplayed();
+                }
+                catch (StaleElementReferenceException e){
+                    break;
+                }
+            }
+        }
+        else {
+            driver.get(url);
+        }
        try {
            SileniumUtil.waitForElementPresent(driver, checkBy, 10);
        }
