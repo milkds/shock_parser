@@ -7,6 +7,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import parser.eibach.EibachController;
 import parser.summit.SumCatSurfer;
 import parser.utils.BasicUtils;
 import parser.utils.RunUtil;
@@ -21,18 +22,7 @@ import java.util.List;
 
 public class Controller {
     public static void main(String[] args) throws InterruptedException {
-        try(FileWriter fw = new FileWriter("src\\main\\resources\\output.txt", true);
-            BufferedWriter bw = new BufferedWriter(fw);
-            PrintWriter out = new PrintWriter(bw))
-        {
-            List<String> inputLines = BasicUtils.getInputInfo();
-            inputLines.forEach(line->{
-               out.println(StringUtils.substringBetween(line, "<loc>", "</loc>"));
-            });
-        } catch (IOException e) {
-            //exception handling left as an exercise for the reader
-        }
-
+        new EibachController().savePagesToDisk();
     }
 
     /*public static void browseSumCats(){

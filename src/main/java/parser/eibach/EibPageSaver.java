@@ -1,5 +1,8 @@
 package parser.eibach;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.*;
 import parser.utils.BasicUtils;
 import parser.utils.SileniumUtil;
@@ -10,6 +13,7 @@ class EibPageSaver {
     private WebDriver driver;
     private String url;
     private By checkBy;
+    private static final Logger logger = LogManager.getLogger(EibPageSaver.class.getName());
 
     void savePage(){
         openPage();
@@ -23,13 +27,16 @@ class EibPageSaver {
             driver.findElement(checkBy);
         }
         catch (NoSuchElementException e){
+            logger.error("no check element found");
             return false;
         }
         String pageSource = driver.getPageSource();
-        String fName = "C:/pages/eibach/"+url+".html";
+        String fNamePart = StringUtils.substringAfterLast(url, "/");
+        String fName = "C:/pages/eibach/"+fNamePart;
         try {
             BasicUtils.saveTextToFile(pageSource, fName);
         } catch (IOException e) {
+            e.printStackTrace();
             return false;
         }
 
@@ -46,6 +53,13 @@ class EibPageSaver {
                 }
                 catch (StaleElementReferenceException e){
                     break;
+                }
+                catch (TimeoutException e){
+                    try {
+                        Thread.sleep(10000);
+                    } catch (InterruptedException ex) {
+                        ex.printStackTrace();
+                    }
                 }
             }
         }
