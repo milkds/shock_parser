@@ -2,6 +2,7 @@ package parser.eibach;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import parser.eibach.entiities.EibItem;
 import parser.eibach.entiities.EibPage;
 import parser.utils.HibernateUtil;
 
@@ -42,5 +43,37 @@ public class EibDAO {
                 transaction.rollback();
             }
         }
+    }
+
+    public static void saveItem(EibItem item) {
+        Session session = HibernateUtil.getEibSessionFactory().openSession();
+        Transaction transaction = null;
+        try {
+            transaction = session.getTransaction();
+            transaction.begin();
+            session.save(item);
+            transaction.commit();
+            session.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }
+    }
+
+    public static List<String> getProcessedItemLinks() {
+        Session session = HibernateUtil.getEibSessionFactory().openSession();
+        List<String> result = new ArrayList<>();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<String> crQ = builder.createQuery(String.class);
+        Root<EibItem> root = crQ.from(EibItem.class);
+        crQ.select(root.get("url")).distinct(true);
+        Query q = session.createQuery(crQ);
+        result = q.getResultList();
+        session.close();
+
+        return result;
+
     }
 }

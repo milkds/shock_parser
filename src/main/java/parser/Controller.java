@@ -7,6 +7,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import parser.eibach.EibTest;
 import parser.eibach.EibachController;
 import parser.summit.SumCatSurfer;
 import parser.utils.BasicUtils;
@@ -22,7 +23,7 @@ import java.util.List;
 
 public class Controller {
     public static void main(String[] args) throws InterruptedException {
-        new EibachController().savePagesToDisk();
+        new EibTest().testItemBuild();
     }
 
     /*public static void browseSumCats(){
