@@ -8,6 +8,7 @@ import org.jsoup.nodes.Document;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import parser.eibach.entiities.EibCar;
 import parser.eibach.entiities.EibItem;
 import parser.fox.FoxSiteSurfer;
 import parser.utils.BasicUtils;
@@ -55,7 +56,9 @@ public class EibachController {
         Set<String> itemsToCheck = EibachService.getAllItemsLinks();
         itemsToCheck.removeAll(processedItems);
         Map<String, String> nameLinkMap = getNameLinkMap(itemsToCheck);
+        logger.info("got nameLinkMap");
         Set<String> pages = getFileNameSet();
+        logger.info("got pages names " + pages.size());
         pages.forEach(page->{
             if (nameLinkMap.containsKey(page)){
                 Document doc = null;
@@ -65,9 +68,12 @@ public class EibachController {
                     e.printStackTrace();
                 }
                 EibItem item = new ItemBuilder(doc, nameLinkMap.get(page)).buildItem();
-                EibachService.saveItemToDB(item);
+                if (item!=null){
+                    EibachService.saveItemToDB(item);
+                }
             }
         });
+        HibernateUtil.shutdown();
     }
 
     private Set<String> getFileNameSet() {
@@ -87,7 +93,7 @@ public class EibachController {
         Map<String, String> result = new HashMap<>();
         itemsToCheck.forEach(link->{
             String fName = StringUtils.substringAfterLast(link, "/");
-            result.put(fName, link);
+            result.put("C:\\pages\\eibach\\"+fName, link);
         });
 
         return result;

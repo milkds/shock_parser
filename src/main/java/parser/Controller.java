@@ -23,7 +23,7 @@ import java.util.List;
 
 public class Controller {
     public static void main(String[] args) throws InterruptedException {
-        new EibTest().testItemBuild();
+        new EibachController().processParsedPages();
     }
 
     /*public static void browseSumCats(){

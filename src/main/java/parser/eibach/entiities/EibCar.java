@@ -29,6 +29,9 @@ public class EibCar {
     @Column(name = "REAR")
     private String rear;
 
+    @Column(name = "RATE")
+    private String rate;
+
     @Column(name = "NOTE")
     private String note;
 
@@ -119,5 +122,13 @@ public class EibCar {
 
     public void setItem(EibItem item) {
         this.item = item;
+    }
+
+    public String getRate() {
+        return rate;
+    }
+
+    public void setRate(String rate) {
+        this.rate = rate;
     }
 }

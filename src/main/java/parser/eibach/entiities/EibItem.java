@@ -39,7 +39,7 @@ public class EibItem {
     @Column(name = "IMG_LINK")
     private String imgLink;
 
-    @Column(name = "DESC")
+    @Column(name = "DESCRIPTION")
     private String desc;
 
     @Column(name = "OLD_PRICE")
@@ -48,8 +48,29 @@ public class EibItem {
     @Column(name = "NEW_PRICE")
     private BigDecimal newPrice;
 
+    @Column(name = "BOLT_DIAM")
+    private String boltDiam;
+
+    @Column(name = "EL_LENGTH")
+    private String elLength;
+
+    @Column(name = "EL_WIDTH")
+    private String elWidth;
+
+    @Column(name = "DUTY")
+    private String duty;
+
+    @Column(name = "QUANTITY")
+    private String quantity;
+
     @OneToOne(mappedBy = "item", cascade = CascadeType.ALL)
     private EibCar car;
+
+    @OneToOne(mappedBy = "item", cascade = CascadeType.ALL)
+    private StdBlock stdBlock;
+
+    @OneToOne(mappedBy = "item", cascade = CascadeType.ALL)
+    private MetBlock metBlock;
 
     @Override
     public String toString() {
@@ -180,5 +201,61 @@ public class EibItem {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public StdBlock getStdBlock() {
+        return stdBlock;
+    }
+
+    public void setStdBlock(StdBlock stdBlock) {
+        this.stdBlock = stdBlock;
+    }
+
+    public MetBlock getMetBlock() {
+        return metBlock;
+    }
+
+    public void setMetBlock(MetBlock metBlock) {
+        this.metBlock = metBlock;
+    }
+
+    public String getBoltDiam() {
+        return boltDiam;
+    }
+
+    public void setBoltDiam(String boltDiam) {
+        this.boltDiam = boltDiam;
+    }
+
+    public String getElLength() {
+        return elLength;
+    }
+
+    public void setElLength(String elLength) {
+        this.elLength = elLength;
+    }
+
+    public String getDuty() {
+        return duty;
+    }
+
+    public void setDuty(String duty) {
+        this.duty = duty;
+    }
+
+    public String getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(String quantity) {
+        this.quantity = quantity;
+    }
+
+    public String getElWidth() {
+        return elWidth;
+    }
+
+    public void setElWidth(String elWidth) {
+        this.elWidth = elWidth;
     }
 }

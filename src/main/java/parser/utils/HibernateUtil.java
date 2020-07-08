@@ -6,9 +6,7 @@ import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import parser.eibach.entiities.EibCar;
-import parser.eibach.entiities.EibItem;
-import parser.eibach.entiities.EibPage;
+import parser.eibach.entiities.*;
 import parser.fox.entities.FoxCar;
 import parser.fox.entities.FoxFit;
 import parser.fox.entities.FoxItem;
@@ -87,6 +85,8 @@ public class HibernateUtil {
                 sources.addAnnotatedClass(EibPage.class);
                 sources.addAnnotatedClass(EibItem.class);
                 sources.addAnnotatedClass(EibCar.class);
+                sources.addAnnotatedClass(MetBlock.class);
+                sources.addAnnotatedClass(StdBlock.class);
                 Metadata metadata = sources.getMetadataBuilder().build();
 
                 sessionFactory = metadata.getSessionFactoryBuilder().build();
