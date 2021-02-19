@@ -13,7 +13,7 @@ import java.util.List;
 public class SumPartGetter {
 
     public void printPartsForKeystone(){
-        File[] files = new File("d:/shocks/monroe").listFiles();
+        File[] files = new File("d:/shocks/king").listFiles();
         for (File file: files){
             try {
                 Document document = Jsoup.parse(file, "UTF-8");
@@ -25,12 +25,15 @@ public class SumPartGetter {
     }
 
     private void printPartsFromDoc(Document doc) {
-        Element resEl = doc.getElementById("results");
-        Elements partElements = resEl.getElementsByClass("title");
+        Element resEl = doc.getElementById("sResultsComp");
+        Elements partElements = resEl.getElementsByAttribute("data-prodid");
         partElements.forEach(partEl->{
-            Element finalEl = partEl.getElementsByClass("suggestBeatAPrice").first();
+       //     Element finalEl = partEl.getElementsByClass("suggestBeatAPrice").first();
            try {
-               System.out.println("https://wwwsc.ekeystone.com/Search/Detail?pid="+finalEl.attr("data-prodid"));
+               String url = "https://wwwsc.ekeystone.com/Search/Detail?pid="+partEl.attr("data-prodid");
+               url = url.replace("KSS-", "KSH");
+               System.out.println(url);
+               //System.out.println("https://wwwsc.ekeystone.com/Search/Detail?pid="+partEl.attr("data-prodid"));
            }
            catch (NullPointerException e){
            }

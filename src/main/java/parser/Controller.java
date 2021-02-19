@@ -1,42 +1,30 @@
 package parser;
 
-import org.apache.commons.lang3.StringUtils;
-import org.openqa.selenium.By;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import parser.eibach.EibTest;
-import parser.eibach.EibachController;
-import parser.summit.SumCatSurfer;
-import parser.utils.BasicUtils;
-import parser.utils.RunUtil;
-import parser.utils.SileniumUtil;
+import net.sourceforge.tess4j.Tesseract;
+import net.sourceforge.tess4j.TesseractException;
+import parser.summit.SummitController;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Controller {
-    public static void main(String[] args) throws InterruptedException {
-        new EibachController().processParsedPages();
+    public static void main(String[] args) throws InterruptedException, TesseractException, IOException {
+        //new EibachController().processParsedPages();
+        //new SumPartGetter().printPartsForKeystone();
+
+     //   new SummitController().printParts();
+   //     new SummitController().getParts("https://www.summitracing.com/search/brand/old-man-emu?PageSize=100&SortBy=Default&SortOrder=Default");
+       new SummitController().getItemPages("ome");
     }
 
-    /*public static void browseSumCats(){
-        List<String> catUrls = BasicUtils.getInputInfo();
-        List<String> finalUrls = new ArrayList<>();
-        catUrls.forEach(url->{
-            url = StringUtils.substringBefore(url, "?fr");
-            url = url + "?PageSize=100&SortBy=Default&SortOrder=Ascending&autoview=SKU&fr=part-type&ar=1&page=1";
-            finalUrls.add(url);
-        });
-        new SumCatSurfer().printPartsFromCategory(catUrls);
-    }*/
 
+    private void tessTest(){
+        Tesseract tesseract = new Tesseract();
+        tesseract.setDatapath("E://tesdata");
+        tesseract.setLanguage("eng");
+        tesseract.setPageSegMode(1);
+        /*   tesseract.setOcrEngineMode(1);*/
+     ///   System.out.println(tesseract.doOCR(new File("E://ocr.jpeg")));
+    }
 
 
 }
