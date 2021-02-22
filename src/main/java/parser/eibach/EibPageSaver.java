@@ -76,7 +76,7 @@ class EibPageSaver {
     EibPageSaver(WebDriver driver, String url) {
         this.driver = driver;
         this.url = url;
-        checkBy = By.className("bottom-newsletter");
+        checkBy = By.className("post_footer");
     }
 
 

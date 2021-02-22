@@ -269,8 +269,37 @@ public class ItemBuilder {
             result.setImgLink("NO PIC AVAILABLE");
         }
         else {
-            result.setImgLink(itemPicEl.attr("src"));
+            String main = itemPicEl.attr("src") + ".main";
+            String additional = getAdditionalPics();
+            result.setImgLink(additional+main);
         }
+    }
+
+    private String getAdditionalPics() {
+        String result = "";
+        StringBuilder pb = new StringBuilder();
+        Element itemPicEl = doc.getElementsByClass("wsm-prod-addtnl-images").first();
+        if (itemPicEl==null){
+            return result;
+        }
+        Elements picEls = itemPicEl.getElementsByClass("wsm_product_thumb");
+        if (picEls.isEmpty()){
+            return result;
+        }
+        for (Element picEl: picEls){
+            Element pic = picEl.getElementsByTag("a").first();
+            if (pic==null){
+              continue;
+            }
+            String picUrl = pic.attr("href");
+            if (picUrl.length()>0){
+                pb.append(picUrl);
+                pb.append("DDD");
+            }
+        }
+
+
+        return pb.toString();
     }
 
     private void setPricingFields(EibItem result) {

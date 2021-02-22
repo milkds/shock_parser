@@ -110,6 +110,9 @@ public class SumPagesGetter {
 
     private void sendFirstRequest(CloseableHttpResponse response, String url, String pageCode) {
         String scriptUrl = new SummitPageReader(pageCode).getHeadScriptName();
+        if (scriptUrl.length()==0){
+            return;
+        }
         HttpGet request = new HttpGet("https://www.summitracing.com"+scriptUrl);
         request.addHeader("accept","*/*");
         request.addHeader("accept-encoding","gzip, deflate, br");

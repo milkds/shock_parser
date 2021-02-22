@@ -31,6 +31,9 @@ public class SummitPageReader {
     static boolean isUniversal(String appPage) {
         Document doc = Jsoup.parse(appPage);
         Elements results = getResultsFromAppPage(doc);
+        if (results==null){
+            return true;
+        }
         Element first = results.first();
         String uniTxt = getUniTxt(first);
         logger.info("uniText "+uniTxt);
@@ -47,7 +50,14 @@ public class SummitPageReader {
 
     private static Elements getResultsFromAppPage(Document doc) {
         Element resultEl = doc.getElementById("results");
-        Elements results = resultEl.select("div.overview.blue-shade");
+        Elements results = null;
+        try {
+            results = resultEl.select("div.overview.blue-shade");
+       }
+        catch (NullPointerException e){
+            logger.info("no applications tab for current item");
+            return results;
+        }
         logger.info("total results " + results.size());
 
         return results;
@@ -118,8 +128,14 @@ public class SummitPageReader {
     String getHeadScriptName() {
         Document doc = Jsoup.parse(page);
         Element headEl = doc.getElementsByTag("head").first();
-        Element scriptEl = headEl.getElementsByTag("script").first();
+        Elements scriptEls = headEl.getElementsByTag("script");
+        for (Element el: scriptEls){
+            Element srcEl = el.getElementsByAttribute("src").first();
+            if (srcEl!=null){
+                return srcEl.attr("src");
+            }
+        }
 
-        return scriptEl.attr("src");
+        return "";
     }
 }
