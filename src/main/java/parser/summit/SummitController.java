@@ -13,9 +13,19 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class SummitController {
     private static final Logger logger = LogManager.getLogger(SummitController.class.getName());
+
+    public void checkParseConsistency(String brand){
+        Map<String, List<String>> fNames = new SumPageToDiscUtil(brand).getFileNamesForBrand(); //k = itemPageName, v = fits.
+        SumParseChecker checker = new SumParseChecker(fNames);
+        checker.checkFitFilesExistence();
+        checker.checkFitQuantities(brand);
+    }
+
+
     public void printParts(){
         String doc = getTestDoc();
         List<String> parts = new SummitPageReader(doc).getParts();
@@ -98,7 +108,6 @@ public class SummitController {
         }
     }
 
-
     private String getFirstPage(String url, SumPagesGetter pagesGetter) {
         return pagesGetter.getValidPage(url);
 
@@ -116,13 +125,13 @@ public class SummitController {
         Session sumSession = HibernateUtil.getSummitSessionFactory().openSession();
         List<String> parts = getPartsForParse(sumSession);
         logger.info("Got parts for parse. Total quantity is " + parts.size());
-        SumPageToDiscSaver saver = new SumPageToDiscSaver(brand);
+        SumPageToDiscUtil saver = new SumPageToDiscUtil(brand);
         getPartsPages(parts, saver, sumSession);
         sumSession.close();
         HibernateUtil.shutdown();
     }
 
-    private void getPartsPages(List<String> parts, SumPageToDiscSaver saver, Session sumSession) {
+    private void getPartsPages(List<String> parts, SumPageToDiscUtil saver, Session sumSession) {
         int counter = 0;
         int total = parts.size();
         SumPagesGetter getter = new SumPagesGetter();
@@ -142,7 +151,7 @@ public class SummitController {
         }
     }
 
-    private void saveFitPages(SumPagesGetter getter, String url, SumPageToDiscSaver saver) {
+    private void saveFitPages(SumPagesGetter getter, String url, SumPageToDiscUtil saver) {
         String appUrl = url+"/applications";
         String appPage = getter.getValidPage(appUrl);
         saver.savePage(appUrl, appPage);

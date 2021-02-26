@@ -74,6 +74,15 @@ public class SummitPageReader {
         return Integer.parseInt(totalQty);
     }
 
+    static int getCurPageStartItem(String page) {
+        Document doc = Jsoup.parse(page);
+        Element qtyElement = doc.getElementsByClass("results-of-total").first();
+        String text = qtyElement.text();
+        String firstItem = StringUtils.substringBefore(text, " -").trim();
+
+        return Integer.parseInt(firstItem);
+    }
+
     public String getPage() {
         return page;
     }

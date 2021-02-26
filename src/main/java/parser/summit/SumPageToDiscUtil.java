@@ -7,15 +7,21 @@ import parser.utils.BasicUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-class SumPageToDiscSaver {
+class SumPageToDiscUtil {
     private String brand;
     private static final String PATH = "c:/pages/";
-    private static final Logger logger = LogManager.getLogger(SumPageToDiscSaver.class.getName());
+    private static final Logger logger = LogManager.getLogger(SumPageToDiscUtil.class.getName());
 
-    SumPageToDiscSaver(String brand) {
+    SumPageToDiscUtil(String brand) {
         this.brand = brand;
         checkDir(brand);
     }
@@ -69,6 +75,60 @@ class SumPageToDiscSaver {
         if (result.contains("/")){
             result = StringUtils.substringBefore(result, "/");
         }
+
+        return result;
+    }
+
+    Map<String, List<String>> getFileNamesForBrand() {
+        List<String> fNames = new ArrayList<>();
+        File[] files = new File(PATH+brand).listFiles();
+
+        for (File file : files) {
+            fNames.add(file.getName());
+        }
+
+        return groupFileNamesByPart(fNames);
+    }
+
+    private Map<String, List<String>> groupFileNamesByPart(List<String> fNames) {
+        Map<String, List<String>> result = new HashMap<>();
+        fNames.forEach(fName->{
+            if (!fName.contains("fit")){
+                result.put(fName, new ArrayList<>());
+            }
+            else {
+                String key = StringUtils.substringBefore( fName,"_fit")+".txt";
+                result.get(key).add(fName);
+            }
+        });
+
+        return result;
+    }
+
+    String getPageText(String firstFitPageName) {
+        String result = "";
+        String fileName = PATH+brand+"/"+firstFitPageName;
+        Path fPath = Path.of(fileName);
+        try {
+            result = Files.readString(fPath);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+    /**
+     *
+     * @param v - List of file names to read from disk.
+     * @return Map where key - file name and v - this file's content.
+     */
+    Map<String, String> getNameContentMap(List<String> v) {
+        Map<String, String> result = new HashMap<>();
+        v.forEach(fName->{
+            String content = getPageText(fName);
+            result.put(fName, content);
+        });
 
         return result;
     }

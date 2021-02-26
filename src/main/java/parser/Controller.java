@@ -13,7 +13,11 @@ public class Controller {
 
      //   new SummitController().printParts();
    //     new SummitController().getParts("https://www.summitracing.com/search/brand/old-man-emu?PageSize=100&SortBy=Default&SortOrder=Default");
-       new SummitController().getItemPages("ome");
+    //   new SummitController().getItemPages("ome");
+       //new SummitController().checkParseConsistency("ome");
+        for (int i = 2; i <=2 ; i++) {
+            System.out.println("makes");
+        }
     }
 
 
