@@ -7,7 +7,6 @@ import parser.utils.BasicUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -105,9 +104,9 @@ class SumPageToDiscUtil {
         return result;
     }
 
-    String getPageText(String firstFitPageName) {
+    String getPageText(String pageName) {
         String result = "";
-        String fileName = PATH+brand+"/"+firstFitPageName;
+        String fileName = PATH+brand+"/"+pageName;
         Path fPath = Path.of(fileName);
         try {
             result = Files.readString(fPath);
@@ -128,6 +127,19 @@ class SumPageToDiscUtil {
         v.forEach(fName->{
             String content = getPageText(fName);
             result.put(fName, content);
+        });
+
+        return result;
+    }
+
+    Map<String, List<String>> getAllPagesForBrand() {
+        Map<String, List<String>> result = new HashMap<>();
+        Map<String, List<String>> fNamesMap = getFileNamesForBrand();
+        fNamesMap.forEach((k,v)->{
+            String mainPageCont = getPageText(k);
+            List<String> fits = new ArrayList<>();
+            v.forEach(fitName-> fits.add(getPageText(fitName)));
+            result.put(mainPageCont, fits);
         });
 
         return result;

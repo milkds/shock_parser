@@ -3,6 +3,7 @@ package parser.summit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
+import parser.summit.entities.SumItem;
 import parser.summit.entities.SumPage;
 import parser.utils.BasicUtils;
 import parser.utils.HibernateUtil;
@@ -18,13 +19,39 @@ import java.util.Map;
 public class SummitController {
     private static final Logger logger = LogManager.getLogger(SummitController.class.getName());
 
+
+    public void saveItemsToDB(String brand){
+        Map<String, List<String>> pages = new SumPageToDiscUtil(brand).getAllPagesForBrand(); //k = main page, v = fits
+        List<SumItem> items = new ArrayList<>();
+        int total = pages.entrySet().size();
+        int counter = 1;
+        for (Map.Entry<String, List<String>> entry : pages.entrySet()) {
+            String k = entry.getKey();
+            List<String> v = entry.getValue();
+            SumItem item = new SumItemBuilder(k, v).buildItem();
+            items.add(item);
+            logger.info("Built item " + counter + " of total " + total);
+            counter++;
+        }
+        saveItems(items);
+    }
+
+    private void saveItems(List<SumItem> items) {
+        logger.info("Items Saved");
+        /*Session session = HibernateUtil.getSummitSessionFactory().openSession();
+        items.forEach(item->{
+            new SummitService().saveItem(item, session);
+        });
+        session.close();
+        HibernateUtil.shutdown();*/
+    }
+
     public void checkParseConsistency(String brand){
         Map<String, List<String>> fNames = new SumPageToDiscUtil(brand).getFileNamesForBrand(); //k = itemPageName, v = fits.
         SumParseChecker checker = new SumParseChecker(fNames);
         checker.checkFitFilesExistence();
         checker.checkFitQuantities(brand);
     }
-
 
     public void printParts(){
         String doc = getTestDoc();

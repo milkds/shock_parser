@@ -46,15 +46,12 @@ class SumParseChecker {
     private void printMissingPagesUrls(String brand, List<String> fitNames) {
         Map<String, String> nameContentMap = new SumPageToDiscUtil(brand).getNameContentMap(fitNames);
         String firstFitName = getFirstFitName(fitNames);
-        //first fit will be always present, as without it we can't
+        //first fit will be always present, as without it we can't get here
         int totalFitPages = getTotalFitPages(nameContentMap.get(firstFitName));
         if (totalFitPages==fitNames.size()){
             return;
         }
         printMissingPages(nameContentMap, firstFitName, brand, totalFitPages);
-
-
-        //continue here
     }
 
     //will be always 2+ pages in map.
