@@ -1,13 +1,28 @@
 package parser.summit.entities;
 
+import javax.persistence.*;
 import java.util.StringJoiner;
 
+@Table(name = "item_attributes")
 public class SumItemAttribute {
+
+    @Id
+    @Column(name = "SUM_ATT_ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @Column(name = "ATT_NAME")
     private String name;
+
+    @Column(name = "ATT_VALUE")
     private String value;
 
-    public SumItemAttribute(String name, String value) {
 
+    @ManyToOne
+    @JoinColumn(name = "ITEM_ID")
+    private SumItem item;
+
+    public SumItemAttribute(String name, String value) {
         this.name = name;
         this.value = value;
     }
@@ -34,5 +49,21 @@ public class SumItemAttribute {
                 .add("name='" + name + "'")
                 .add("value='" + value + "'")
                 .toString();
+    }
+
+    public void setItem(SumItem item) {
+        this.item = item;
+    }
+
+    public SumItem getItem() {
+        return item;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

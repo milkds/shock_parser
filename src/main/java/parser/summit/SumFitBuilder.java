@@ -58,6 +58,7 @@ class SumFitBuilder {
             String name = spanEls.get(0).text().trim();
             String value = spanEls.get(1).text().trim();
             SumFitAttribute att = new SumFitAttribute(name, value);
+            att.setFitment(result);
             atts.add(att);
         });
         result.setAttributes(atts);

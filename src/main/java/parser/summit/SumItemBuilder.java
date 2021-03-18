@@ -70,6 +70,7 @@ class SumItemBuilder {
             }
             else {
                 SumItemAttribute att = new SumItemAttribute(name, value);
+                att.setItem(this.result);
                 result.add(att);
             }
         });
@@ -126,7 +127,7 @@ class SumItemBuilder {
         Element shDesEl = doc.getElementsByClass("part-description").first();
         shDesEl = shDesEl.getElementsByClass("suggestBeatAPrice").first();
         shDesEl = shDesEl.getElementsByClass("description").first();
-        result.setShortTitle(shDesEl.text());
+        result.setShortDesc(shDesEl.text());
     }
 
     private void getPrice(Document doc) {

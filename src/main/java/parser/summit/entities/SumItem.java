@@ -1,22 +1,52 @@
 package parser.summit.entities;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
 
+@Entity
+@Table(name = "sum_items")
 public class SumItem {
+
+    @Id
+    @Column(name = "ITEM_ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @Column(name = "TITLE")
     private String title;
+
+    @Column(name = "PRICE")
     private BigDecimal price;
-    private String shortTitle;
+
+    @Column(name = "SHORT_DESC")
+    private String shortDesc;
+
+    @Column(name = "PIC_URLS")
     private String picUrls;
+
+    @Column(name = "VIDEO_URLS")
     private String videoUrls;
+
+    @Column(name = "BRAND")
     private String brand;
+
+    @Column(name = "PART_NO")
     private String partNo;
+
+    @Column(name = "ITEM_TYPE")
     private String itemType;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "item")
     private List<SumItemAttribute> attributes = new ArrayList<>();
+
+    @Column(name = "DESCRIPTION")
     private String description;
-    private List<SumFitment> fitments;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "item")
+    private List<SumFitment> fitments = new ArrayList<>();
 
 
     @Override
@@ -24,7 +54,7 @@ public class SumItem {
         return new StringJoiner(System.lineSeparator(), SumItem.class.getSimpleName() + "[", "]")
                 .add("title='" + title + "'")
                 .add("price=" + price)
-                .add("shortTitle='" + shortTitle + "'")
+                .add("shortDesc='" + shortDesc + "'")
                 .add("picUrls='" + picUrls + "'")
                 .add("videoUrls='" + videoUrls + "'")
                 .add("brand='" + brand + "'")
@@ -52,12 +82,12 @@ public class SumItem {
         return price;
     }
 
-    public void setShortTitle(String shortTitle) {
-        this.shortTitle = shortTitle;
+    public void setShortDesc(String shortTitle) {
+        this.shortDesc = shortTitle;
     }
 
-    public String getShortTitle() {
-        return shortTitle;
+    public String getShortDesc() {
+        return shortDesc;
     }
 
     public void setPicUrls(String picUrls) {
@@ -122,5 +152,13 @@ public class SumItem {
 
     public List<SumFitment> getFitments() {
         return fitments;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

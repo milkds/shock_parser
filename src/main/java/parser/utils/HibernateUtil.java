@@ -11,7 +11,7 @@ import parser.fox.entities.FoxCar;
 import parser.fox.entities.FoxFit;
 import parser.fox.entities.FoxItem;
 import parser.fox.entities.FoxItemSpec;
-import parser.summit.entities.SumPage;
+import parser.summit.entities.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -126,6 +126,10 @@ public class HibernateUtil {
 
                 MetadataSources sources = new MetadataSources(registry);
                 sources.addAnnotatedClass(SumPage.class);
+                sources.addAnnotatedClass(SumItem.class);
+                sources.addAnnotatedClass(SumItemAttribute.class);
+                sources.addAnnotatedClass(SumFitment.class);
+                sources.addAnnotatedClass(SumFitAttribute.class);
 
                 Metadata metadata = sources.getMetadataBuilder().build();
 
