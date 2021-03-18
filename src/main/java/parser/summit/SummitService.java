@@ -17,5 +17,6 @@ class SummitService {
     }
 
     void saveItem(SumItem item, Session session) {
+        new SumDAO().saveItem(item, session);
     }
 }

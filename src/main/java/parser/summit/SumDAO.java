@@ -3,6 +3,7 @@ package parser.summit;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import parser.eibach.entiities.EibItem;
+import parser.summit.entities.SumItem;
 import parser.summit.entities.SumPage;
 
 import javax.persistence.Query;
@@ -43,5 +44,20 @@ public class SumDAO {
 
         return result;
 
+    }
+
+    public void saveItem(SumItem item, Session session) {
+        Transaction transaction = null;
+        try {
+            transaction = session.getTransaction();
+            transaction.begin();
+            session.save(item);
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }
     }
 }
