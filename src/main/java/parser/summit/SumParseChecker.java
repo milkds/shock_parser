@@ -28,6 +28,7 @@ class SumParseChecker {
     void checkFitQuantities(String brand) {
         fNames.forEach((k,v)->{
             String firstFitPageName = getFirstFitName(v);
+            logger.info("checking " + buildPageURL(0, firstFitPageName));
             if (firstFitPageName.length()==0){
                 return;
             }
@@ -46,16 +47,19 @@ class SumParseChecker {
     private void printMissingPagesUrls(String brand, List<String> fitNames) {
         Map<String, String> nameContentMap = new SumPageToDiscUtil(brand).getNameContentMap(fitNames);
         String firstFitName = getFirstFitName(fitNames);
-        //first fit will be always present, as without it we can't get here
+        //first fit will be always present, as without it we can't
         int totalFitPages = getTotalFitPages(nameContentMap.get(firstFitName));
         if (totalFitPages==fitNames.size()){
             return;
         }
-        printMissingPages(nameContentMap, firstFitName, brand, totalFitPages);
+        printMissingPages(nameContentMap, firstFitName, totalFitPages);
+
+
+        //continue here
     }
 
     //will be always 2+ pages in map.
-    private void printMissingPages(Map<String, String> nameContentMap, String firstFitName, String brand, int totalFitPages) {
+    private void printMissingPages(Map<String, String> nameContentMap, String firstFitName, int totalFitPages) {
         int counter = 21;
         for (int i = 2; i <= totalFitPages; i++) {
             boolean pageExists = false;
@@ -69,17 +73,15 @@ class SumParseChecker {
             }
             if (!pageExists){
                 logger.info("No page");
-                String url = buildPageURL(i, firstFitName, brand);
+                String url = buildPageURL(i, firstFitName);
                 System.out.println(url);
             }
         }
     }
 
-    private String buildPageURL(int i, String firstFitName, String brand) {
+    private String buildPageURL(int i, String firstFitName) {
         StringBuilder builder = new StringBuilder("https://www.summitracing.com/int/parts/");
         String part = StringUtils.substringBefore(firstFitName, "_fit1");
-        builder.append(brand);
-        builder.append("-");
         builder.append(part);
         builder.append("/applications?page=");
         builder.append(i);
@@ -98,7 +100,7 @@ class SumParseChecker {
            return totalFullPages;
        }
 
-       return totalFits+1;
+       return totalFullPages+1;
     }
 
     private String getFirstFitName(List<String> v) {

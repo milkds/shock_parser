@@ -36,7 +36,7 @@ public class SummitPageReader {
         }
         Element first = results.first();
         String uniTxt = getUniTxt(first);
-        logger.info("uniText "+uniTxt);
+//        logger.info("uniText "+uniTxt);
         if (uniTxt.contains("Universal")){
             return uniTxt.contains("Yes");
         }
@@ -58,7 +58,7 @@ public class SummitPageReader {
             logger.info("no applications tab for current item");
             return results;
         }
-        logger.info("total results " + results.size());
+        logger.debug("total results " + results.size());
 
         return results;
     }
@@ -69,7 +69,7 @@ public class SummitPageReader {
         String text = totalEl.text();
         String totalQty = StringUtils.substringAfter(text,"of ");
         totalQty = totalQty.replaceAll(",", "");
-        logger.info("total quantity is " + totalQty);
+        logger.info("total fitment quantity is " + totalQty);
 
         return Integer.parseInt(totalQty);
     }
@@ -78,7 +78,9 @@ public class SummitPageReader {
         Document doc = Jsoup.parse(page);
         Element qtyElement = doc.getElementsByClass("results-of-total").first();
         String text = qtyElement.text();
+//        logger.info("Quantity text " + text);
         String firstItem = StringUtils.substringBefore(text, " -").trim();
+        firstItem = firstItem.replace("Results ", "");
 
         return Integer.parseInt(firstItem);
     }
