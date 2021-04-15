@@ -40,6 +40,9 @@ class SumFitBuilder {
     private List<SumFitment> buildFits(Document doc) {
         List<SumFitment>  result = new ArrayList<>();
         Element resultEl = doc.getElementById("results");
+        if (resultEl==null){
+            return result;
+        }
         Elements fitEls = resultEl.getElementsByClass("overview");
         fitEls.forEach(element -> {
             SumFitment fit = buildFit(element);

@@ -133,6 +133,7 @@ class SumPageToDiscUtil {
     }
 
     Map<String, List<String>> getAllPagesForBrand() {
+        logger.info("reading pages from disc");
         Map<String, List<String>> result = new HashMap<>();
         Map<String, List<String>> fNamesMap = getFileNamesForBrand();
         fNamesMap.forEach((k,v)->{
@@ -141,6 +142,7 @@ class SumPageToDiscUtil {
             v.forEach(fitName-> fits.add(getPageText(fitName)));
             result.put(mainPageCont, fits);
         });
+        logger.info("pages read");
 
         return result;
     }

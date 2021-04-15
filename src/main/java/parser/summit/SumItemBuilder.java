@@ -93,6 +93,10 @@ class SumItemBuilder {
     private void getVideos(Document doc) {
         StringBuilder urlsCollector = new StringBuilder();
         Element allVidEl = doc.getElementsByClass("media-thumbnails-video").first();
+        if (allVidEl==null){
+            result.setVideoUrls("");
+            return;
+        }
         Elements vidEls = allVidEl.getElementsByTag("li");
         for (Element vidEl : vidEls) {
             String url = vidEl.getElementsByTag("a").first().attr("data-video");
@@ -108,18 +112,41 @@ class SumItemBuilder {
     private void getImages(Document doc) {
         StringBuilder urlsCollector = new StringBuilder();
         Element allPicEL = doc.getElementsByClass("media-thumbnails-images").first();
+        if (allPicEL==null){
+            result.setPicUrls("");
+            return;
+        }
         Elements picEls = allPicEL.getElementsByTag("li");
+        if (picEls.size()==0){
+            result.setPicUrls("");
+            return;
+        }
         int counter = 0;
         for (Element picEl : picEls) {
-            String url = picEl.getElementsByTag("img").first().attr("src");
+            Element imgEl = picEl.getElementsByTag("img").first();
+            if (imgEl==null){
+                continue;
+            }
+            String url = imgEl.attr("src");
             url = url.replace("small", "xlarge");
             url = url.replace("_s.jpg", "_xl.jpg_" + counter);
+            String alt = imgEl.attr("alt");
+            boolean actual = false;
+            if (alt.endsWith("False")){
+                actual = true;
+            }
+            url = url+"_"+actual;
             counter++;
             urlsCollector.append(url);
             urlsCollector.append("div");
         }
         String urls = urlsCollector.toString();
-        urls = urls.substring(0,urls.length()-3);
+        if (allPicEL.getElementsByClass("moreimage").size()!=0){
+            urls = urls + "_HMI";
+        }
+        else {
+            urls = urls.substring(0,urls.length()-3);
+        }
         result.setPicUrls(urls);
     }
 
@@ -141,7 +168,12 @@ class SumItemBuilder {
 
     private void getTitle(Document doc) {
         Element titleEl = doc.getElementsByAttributeValueStarting("class", "detail-title").first();
+        /*if (titleEl==null){
+            System.out.println(doc.toString());
+            System.exit(1);
+        }*/
         titleEl = titleEl.getElementsByClass("title").first();
         result.setTitle(titleEl.text());
+        logger.debug("Building " + result.getTitle());
     }
 }

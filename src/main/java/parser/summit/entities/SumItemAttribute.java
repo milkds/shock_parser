@@ -3,6 +3,7 @@ package parser.summit.entities;
 import javax.persistence.*;
 import java.util.StringJoiner;
 
+@Entity
 @Table(name = "item_attributes")
 public class SumItemAttribute {
 

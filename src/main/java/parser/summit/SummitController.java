@@ -38,12 +38,12 @@ public class SummitController {
 
     private void saveItems(List<SumItem> items) {
         logger.info("Items Saved");
-        /*Session session = HibernateUtil.getSummitSessionFactory().openSession();
+        Session session = HibernateUtil.getSummitSessionFactory().openSession();
         items.forEach(item->{
             new SummitService().saveItem(item, session);
         });
         session.close();
-        HibernateUtil.shutdown();*/
+        HibernateUtil.shutdown();
     }
 
     public void checkParseConsistency(String brand){

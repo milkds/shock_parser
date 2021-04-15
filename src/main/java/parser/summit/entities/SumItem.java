@@ -39,13 +39,13 @@ public class SumItem {
     @Column(name = "ITEM_TYPE")
     private String itemType;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "item")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "item", cascade = CascadeType.ALL )
     private List<SumItemAttribute> attributes = new ArrayList<>();
 
     @Column(name = "DESCRIPTION")
     private String description;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "item")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "item", cascade = CascadeType.ALL )
     private List<SumFitment> fitments = new ArrayList<>();
 
 

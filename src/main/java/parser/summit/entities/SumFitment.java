@@ -14,7 +14,7 @@ public class SumFitment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "fitment")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "fitment", cascade = CascadeType.ALL)
     private List<SumFitAttribute> attributes = new ArrayList<>();
 
     @ManyToOne
