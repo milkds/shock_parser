@@ -104,7 +104,7 @@ class SumPageToDiscUtil {
         return result;
     }
 
-    String getPageText(String pageName) {
+   String getPageText(String pageName) {
         String result = "";
         String fileName = PATH+brand+"/"+pageName;
         Path fPath = Path.of(fileName);

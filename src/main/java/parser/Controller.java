@@ -12,9 +12,9 @@ public class Controller {
         //new SumPartGetter().printPartsForKeystone();
 
      //   new SummitController().printParts();
-   //     new SummitController().getParts("https://www.summitracing.com/search/brand/old-man-emu?PageSize=100&SortBy=Default&SortOrder=Default");
+       // new SummitController().getParts("https://www.summitracing.com/search/brand/old-man-emu?PageSize=100&SortBy=Default&SortOrder=Default");
     //   new SummitController().getItemPages("ome");
-       //new SummitController().checkParseConsistency("ome");
+     // new SummitController().checkParseConsistency("ome");
         new SummitController().saveItemsToDB("ome");
     }
 

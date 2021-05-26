@@ -3,6 +3,9 @@ package parser.summit;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 import java.util.List;
 import java.util.Map;
@@ -15,14 +18,24 @@ class SumParseChecker {
         this.fNames = fNames;
     }
 
-    void  checkFitFilesExistence() {
+    void checkFitFilesExistence(String brand) {
         fNames.forEach((k,v)->{
             if (v.size()==0){
-                logger.info("No fit page for " + k);
+                if (fitsExpected(k, brand)){
+                    logger.error("No fit page for " + k);
+                }
             }
         });
 
         logger.info("Fit file existence check complete");
+    }
+
+    private boolean fitsExpected(String fName, String brand) {
+        String page = new SumPageToDiscUtil(brand).getPageText(fName);
+        Document doc = Jsoup.parse(page);
+        Element el = doc.getElementById("applications");
+
+        return el!=null;
     }
 
     void checkFitQuantities(String brand) {
@@ -110,7 +123,7 @@ class SumParseChecker {
             }
         }
 
-        logger.error("No fit1 file name ");
+        //logger.error("No fit1 file name ");
 
         return "";
     }

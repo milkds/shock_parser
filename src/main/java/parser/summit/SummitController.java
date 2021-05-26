@@ -3,6 +3,9 @@ package parser.summit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import parser.summit.entities.SumItem;
 import parser.summit.entities.SumPage;
 import parser.utils.BasicUtils;
@@ -49,7 +52,7 @@ public class SummitController {
     public void checkParseConsistency(String brand){
         Map<String, List<String>> fNames = new SumPageToDiscUtil(brand).getFileNamesForBrand(); //k = itemPageName, v = fits.
         SumParseChecker checker = new SumParseChecker(fNames);
-        checker.checkFitFilesExistence();
+        checker.checkFitFilesExistence(brand);
         checker.checkFitQuantities(brand);
     }
 
@@ -127,7 +130,7 @@ public class SummitController {
     private void randomSleep() {
         try {
             long rand = (long)(Math.random()*15000);
-            rand = rand + 15000;
+            rand = rand + 25000;
             logger.debug("Pause " + rand + " millis");
             Thread.sleep(rand);
         } catch (InterruptedException e) {
@@ -164,9 +167,12 @@ public class SummitController {
         SumPagesGetter getter = new SumPagesGetter();
         for (String part: parts){
             String url = "https://www.summitracing.com/int/parts/"+part;
+          //  String url = "https://www.summitracing.com/parts/"+part;
             String urlHTML = getter.getValidPageNoRef(url);
             randomSleep();
-            saveFitPages(getter, url, saver);
+            if (hasApplications(urlHTML)){
+                saveFitPages(getter, url, saver);
+            }
             saver.savePage(url, urlHTML);
             counter++;
             SumPage page = new SumPage();
@@ -176,6 +182,13 @@ public class SummitController {
             logger.info("Saved page " + counter + " of total " + total);
             randomSleep();
         }
+    }
+
+    private boolean hasApplications(String urlHTML) {
+        Document doc = Jsoup.parse(urlHTML);
+        Element el = doc.getElementById("applications");
+
+        return el!=null;
     }
 
     private void saveFitPages(SumPagesGetter getter, String url, SumPageToDiscUtil saver) {

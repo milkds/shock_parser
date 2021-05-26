@@ -45,8 +45,12 @@ public class SumItem {
     @Column(name = "DESCRIPTION")
     private String description;
 
+    @Column(name = "KIT_CONTENTS")
+    private String kitContents;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "item", cascade = CascadeType.ALL )
     private List<SumFitment> fitments = new ArrayList<>();
+
 
 
     @Override
@@ -160,5 +164,13 @@ public class SumItem {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public void setKitContents(String kitContents) {
+        this.kitContents = kitContents;
+    }
+
+    public String getKitContents() {
+        return kitContents;
     }
 }

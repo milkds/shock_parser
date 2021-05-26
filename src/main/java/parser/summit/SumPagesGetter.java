@@ -3,7 +3,9 @@ package parser.summit;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
+import org.apache.http.HttpHost;
 import org.apache.http.client.CookieStore;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.protocol.HttpClientContext;
@@ -11,6 +13,7 @@ import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
 import org.apache.http.util.EntityUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -186,6 +189,12 @@ public class SumPagesGetter {
 
 
     public SumPagesGetter() {
+        /*HttpHost proxy = new HttpHost("103.214.46.60", 12334, "https");
+        DefaultProxyRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxy);
+         httpClient = HttpClients.custom()
+                .setRoutePlanner(routePlanner)
+                .build();
+*/
       httpClient = HttpClients.createDefault();
       context = null;
     }

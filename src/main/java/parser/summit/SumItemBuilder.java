@@ -11,8 +11,7 @@ import parser.summit.entities.SumItem;
 import parser.summit.entities.SumItemAttribute;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 class SumItemBuilder {
     private String mainPage;
@@ -31,10 +30,11 @@ class SumItemBuilder {
         getTitle(doc);
         getPrice(doc);
         getShortDesc(doc);
+        getKitContent(doc);
         getImages(doc);
-        getVideos(doc);
-        getBrand(doc);
-        getPart(doc);
+     //   getVideos(doc);
+       // getBrand(doc);
+       // getPart(doc);
         getProperties(doc);
         if (fitPages.size()!=0){
             List<SumFitment> fits = new SumFitBuilder(fitPages).getFits(result);
@@ -46,20 +46,60 @@ class SumItemBuilder {
         return result;
     }
 
-    private void getProperties(Document doc) {
-        Element propElsAll = doc.getElementById("part-tab-info");
-        Element propElsPairs = propElsAll.getElementsByClass("overview").first();
-        Elements propEls = propElsPairs.getElementsByTag("p");
-
-        List<SumItemAttribute> attributes = getItemAttributes(propEls);
-        this.result.setAttributes(attributes);
-
-        Element descEl = propElsAll.getElementsByClass("overview-description").first();
-        String descTxt = descEl.text().trim();
-        this.result.setDescription(descTxt);
+    private void getKitContent(Document doc) {
+        Element kitElMark = doc.getElementById("kitcombocontents");
+        if (kitElMark==null){
+            return;
+        }
+        Element kitEl = doc.getElementsByClass("kit-combo-content-container").first();
+        String kitElHtml = kitEl.html();
+        result.setKitContents(kitElHtml);
     }
 
-    private List<SumItemAttribute> getItemAttributes(Elements propEls) {
+    private void getProperties(Document doc) {
+        Element propElsAll = doc.getElementsByClass("attribute-container").first();
+        Map<String, String> attributes = getItemAttributes(propElsAll);
+        List<SumItemAttribute> itemAttributes = new ArrayList<>();
+        attributes.forEach((k,v)->{
+            switch (k){
+                case "Brand:": result.setBrand(v); break;
+                case "Manufacturer's Part Number:": result.setPartNo(v); break;
+                case "Part Type:": result.setItemType(v); break;
+                default: itemAttributes.add(new SumItemAttribute(k,v));
+            }
+        });
+        result.setAttributes(itemAttributes);
+        itemAttributes.forEach(att->{
+            att.setItem(result);
+        });
+
+        Element descEl = doc.getElementsByClass("part-detail-description").first();
+        if (descEl==null){
+            result.setDescription("");
+            return;
+        }
+        String descTxt = descEl.text();
+        result.setDescription(descTxt);
+    }
+
+    private Map<String, String> getItemAttributes(Element propElsAll) {
+        Map<String, String> result = new HashMap<>();
+        Elements propEls = propElsAll.getElementsByClass("small-12");
+        String name = "";
+       for (Element propEl: propEls){
+            String txt = propEl.text().trim();
+            if (name.length()==0){
+                name = txt;
+            }
+            else {
+                result.put(name, txt);
+                name = "";
+            }
+       }
+        return result;
+    }
+
+    /*private List<SumItemAttribute> getItemAttributes(Elements propEls) {
         List<SumItemAttribute> result = new ArrayList<>();
         propEls.forEach(element -> {
             Elements spanEls = element.getElementsByTag("span");
@@ -76,7 +116,7 @@ class SumItemBuilder {
         });
 
         return result;
-    }
+    }*/
 
     private void getPart(Document doc) {
         Element propEl = doc.getElementById("part-tab-info");
@@ -109,9 +149,81 @@ class SumItemBuilder {
         result.setVideoUrls(urls);
     }
 
-    private void getImages(Document doc) {
+    private void getImages(Document doc){
+        Element allPicEL = doc.getElementsByClass("part-detail-image-thumbs").first();
+        if (allPicEL==null){
+            result.setPicUrls("");
+            return;
+        }
+        Elements picEls = allPicEL.getElementsByTag("li");
+        if (picEls.size()==0){
+            result.setPicUrls("");
+            return;
+        }
+        String mainPic = getPicUrlFromEl(picEls.get(0));
+        if (mainPic==null){
+            result.setPicUrls("");
+            return;
+        }
+        mainPic = convertPicToLarge("small", "_s", mainPic)+"_0";
+        if (picEls.size()==1){
+            result.setPicUrls(mainPic);
+            return;
+        }
+        Set<String> pics = new HashSet<>();
+        for (int i = 1; i < picEls.size(); i++) {
+            String url = getPicUrlFromEl(picEls.get(i));
+            if (url==null){
+                continue;
+            }
+            pics.add(convertPicToLarge("small","_s",url));
+        }
+        if (allPicEL.getElementsByClass("thumbnail-count").size()!=0){
+          Elements kitEls = doc.getElementsByClass("kit-combo-content-container");
+          if (kitEls.size()==1){
+              Elements imgEls = kitEls.get(0).getElementsByTag("img");
+              imgEls.forEach(imgEl->{
+                  String url = imgEl.attr("src");
+                  pics.add(convertPicToLarge("norm", "_m", url));
+              });
+          }
+        }
+        String allPics = buildPicField(mainPic, pics);
+        result.setPicUrls(allPics);
+    }
+
+    private String buildPicField(String mainPic, Set<String> pics) {
+        StringBuilder sb = new StringBuilder(mainPic);
+        int counter = 1;
+        for (String pic: pics){
+            sb.append("div");
+            sb.append(pic);
+            sb.append("_").append(counter);
+            counter++;
+        }
+
+        return sb.toString();
+    }
+
+    private String getPicUrlFromEl(Element element) {
+        Element imgEl = element.getElementsByTag("img").first();
+        Element videoeL = element.getElementsByClass("media-thumbs-video").first();
+        if (videoeL!=null){
+            return null;
+        }
+        return imgEl.attr("src");
+    }
+
+    private String convertPicToLarge(String size, String prefix, String url) {
+        String result = url.replace(size, "large");
+        result = result.replace(prefix, "_xl");
+
+        return result;
+    }
+
+    private void getImages2(Document doc) {
         StringBuilder urlsCollector = new StringBuilder();
-        Element allPicEL = doc.getElementsByClass("media-thumbnails-images").first();
+        Element allPicEL = doc.getElementsByClass("part-detail-image-thumbs").first();
         if (allPicEL==null){
             result.setPicUrls("");
             return;
@@ -130,19 +242,19 @@ class SumItemBuilder {
             String url = imgEl.attr("src");
             url = url.replace("small", "xlarge");
             url = url.replace("_s.jpg", "_xl.jpg_" + counter);
-            String alt = imgEl.attr("alt");
+            /*String alt = imgEl.attr("alt");
             boolean actual = false;
             if (alt.endsWith("False")){
                 actual = true;
             }
-            url = url+"_"+actual;
+            url = url+"_"+actual;*/
             counter++;
             urlsCollector.append(url);
             urlsCollector.append("div");
         }
         String urls = urlsCollector.toString();
-        if (allPicEL.getElementsByClass("moreimage").size()!=0){
-            urls = urls + "_HMI";
+        if (allPicEL.getElementsByClass("thumbnail-count").size()!=0){
+            urls = getMoreImages(urls, picEls);
         }
         else {
             urls = urls.substring(0,urls.length()-3);
@@ -150,11 +262,25 @@ class SumItemBuilder {
         result.setPicUrls(urls);
     }
 
+    private String getMoreImages(String urls, Elements picEls) {
+        String kits = result.getKitContents();
+        if (kits==null){
+            return urls;
+        }
+        //https://static.summitracing.com/global/images/prod/small/emu-2418_s.jpg
+       // https://static.summitracing.com/global/images/prod/norm/emu-2418_m.jpg
+
+
+        return "";
+    }
+
     private void getShortDesc(Document doc) {
-        Element shDesEl = doc.getElementsByClass("part-description").first();
-        shDesEl = shDesEl.getElementsByClass("suggestBeatAPrice").first();
-        shDesEl = shDesEl.getElementsByClass("description").first();
-        result.setShortDesc(shDesEl.text());
+        Element shDesEl = doc.getElementsByClass("item-description").first();
+      //  shDesEl = shDesEl.getElementsByClass("suggestBeatAPrice").first();
+     //   shDesEl = shDesEl.getElementsByClass("description").first();
+        String txt = shDesEl.text();
+        txt = txt.replace("See More Specifications","").trim();
+        result.setShortDesc(txt);
     }
 
     private void getPrice(Document doc) {
@@ -167,12 +293,12 @@ class SumItemBuilder {
     }
 
     private void getTitle(Document doc) {
-        Element titleEl = doc.getElementsByAttributeValueStarting("class", "detail-title").first();
+        Element titleEl = doc.getElementsByAttributeValueStarting("class", "part-detail-title").first();
         /*if (titleEl==null){
             System.out.println(doc.toString());
             System.exit(1);
         }*/
-        titleEl = titleEl.getElementsByClass("title").first();
+       // titleEl = titleEl.getElementsByClass("title").first();
         result.setTitle(titleEl.text());
         logger.debug("Building " + result.getTitle());
     }

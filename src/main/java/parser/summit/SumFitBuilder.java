@@ -39,11 +39,10 @@ class SumFitBuilder {
 
     private List<SumFitment> buildFits(Document doc) {
         List<SumFitment>  result = new ArrayList<>();
-        Element resultEl = doc.getElementById("results");
-        if (resultEl==null){
+        Elements fitEls = doc.getElementsByClass("attribute-container");
+        if (fitEls.size()==0){
             return result;
         }
-        Elements fitEls = resultEl.getElementsByClass("overview");
         fitEls.forEach(element -> {
             SumFitment fit = buildFit(element);
             result.add(fit);
@@ -55,15 +54,20 @@ class SumFitBuilder {
     private SumFitment buildFit(Element fitBlockElement) {
         SumFitment result = new SumFitment();
         List<SumFitAttribute> atts = new ArrayList<>();
-        Elements propEls = fitBlockElement.getElementsByTag("p");
-        propEls.forEach(element -> {
-            Elements spanEls = element.getElementsByTag("span");
-            String name = spanEls.get(0).text().trim();
-            String value = spanEls.get(1).text().trim();
-            SumFitAttribute att = new SumFitAttribute(name, value);
-            att.setFitment(result);
-            atts.add(att);
-        });
+        Elements propEls = fitBlockElement.getElementsByClass("small-12");
+        String name = "";
+        for (Element propEL: propEls){
+            String txt = propEL.text();
+            if (name.length()==0){
+                name = txt;
+            }
+            else {
+                SumFitAttribute att = new SumFitAttribute(name, txt);
+                att.setFitment(result);
+                atts.add(att);
+                name = "";
+            }
+        }
         result.setAttributes(atts);
 
         return result;

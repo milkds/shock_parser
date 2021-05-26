@@ -36,7 +36,7 @@ public class SummitPageReader {
         }
         Element first = results.first();
         String uniTxt = getUniTxt(first);
-//        logger.info("uniText "+uniTxt);
+        logger.info("uniText "+uniTxt);
         if (uniTxt.contains("Universal")){
             return uniTxt.contains("Yes");
         }
@@ -45,14 +45,22 @@ public class SummitPageReader {
     }
 
     private static String getUniTxt(Element first) {
-        return first.getElementsByClass("overview-label").first().text();
+        Elements els = null;
+        try {
+             els = first.getElementsByClass("small-12");
+        }
+       catch (NullPointerException e){
+            return "";
+       }
+
+        return els.get(0).text()+" " + els.get(1).text();
     }
 
     private static Elements getResultsFromAppPage(Document doc) {
-        Element resultEl = doc.getElementById("results");
+      //  Element resultEl = doc.getElementsByClass("application-header").first();
         Elements results = null;
         try {
-            results = resultEl.select("div.overview.blue-shade");
+            results = doc.getElementsByClass("attribute-container");
        }
         catch (NullPointerException e){
             logger.info("no applications tab for current item");
@@ -65,10 +73,10 @@ public class SummitPageReader {
 
     static int getTotalFitQty(String appPage) {
         Document doc = Jsoup.parse(appPage);
-        Element totalEl = doc.getElementsByClass("results-of-total").first();
+        Element totalEl = doc.getElementsByClass("application-header").first();
         String text = totalEl.text();
-        String totalQty = StringUtils.substringAfter(text,"of ");
-        totalQty = totalQty.replaceAll(",", "");
+        String totalQty = StringUtils.substringAfter(text,"Results Found: ").trim();
+        //totalQty = totalQty.replaceAll(",", "");
         logger.info("total fitment quantity is " + totalQty);
 
         return Integer.parseInt(totalQty);
