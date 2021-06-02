@@ -1,9 +1,6 @@
 package parser.summit;
 
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpHeaders;
-import org.apache.http.HttpHost;
+import org.apache.http.*;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -25,7 +22,8 @@ public class SumPagesGetter {
     private static final Logger logger = LogManager.getLogger(SumPagesGetter.class.getName());
 
 
-    private CloseableHttpClient httpClient;
+    private HttpClient httpClient;
+   // private CloseableHttpClient httpClient;
     private HttpClientContext context;
     private String referer = "";
 
@@ -34,7 +32,8 @@ public class SumPagesGetter {
         String result = "";
         HttpGet request = getBasicGetRequest(url);
         prepareContext();
-        CloseableHttpResponse response = getResponse(request);
+       // CloseableHttpResponse response = getResponse(request);
+        HttpResponse response = getResponse(request);
         result = processResponse(response, url);
         logger.info("Got page " + url);
 
@@ -53,7 +52,7 @@ public class SumPagesGetter {
         }
     }
 
-    String getPageFromResponse(CloseableHttpResponse response) {
+    String getPageFromResponse(HttpResponse response) {
         String result = "";
         HttpEntity entity = response.getEntity();
         try {
@@ -78,14 +77,14 @@ public class SumPagesGetter {
         context.setAttribute(HttpClientContext.COOKIE_STORE, new BasicCookieStore());
     }
 
-    private String processResponse(CloseableHttpResponse response, String url) {
+    private String processResponse(HttpResponse response, String url) {
         if (response==null){
             return "";
         }
         String pageCode = getPageFromResponse(response);
         if (!SummitPageReader.isDistil(pageCode)){
             avoidDistil(response, url, pageCode);
-            closeResponse(response);
+            //closeResponse(response);
             return pageCode;
         }
         logger.info("Got thrown to distil");
@@ -95,7 +94,7 @@ public class SumPagesGetter {
 
     }
 
-    private void avoidDistil(CloseableHttpResponse response, String url, String pageCode) {
+    private void avoidDistil(HttpResponse response, String url, String pageCode) {
         logger.info("Sending avoid distill script");
         sendFirstRequest(response, url, pageCode);
         /*logger.info("Cookies: ");
@@ -111,13 +110,13 @@ public class SumPagesGetter {
 
     }
 
-    private void sendFirstRequest(CloseableHttpResponse response, String url, String pageCode) {
+    private void sendFirstRequest(HttpResponse response, String url, String pageCode) {
        /* String scriptUrl = new SummitPageReader(pageCode).getHeadScriptName();
         logger.info("Script name = " + scriptUrl);
         if (scriptUrl.length()==0){
             return;
         }*/
-       String scriptUrl = "/Alarums-Exeunter-Hath-Brese-Banq-Wheth-frangerd-";
+        String scriptUrl = "/Alarums-Exeunter-Hath-Brese-Banq-Wheth-frangerd-";
         HttpGet request = new HttpGet("https://www.summitracing.com"+scriptUrl);
         request.addHeader("accept","*/*");
         request.addHeader("accept-encoding","gzip, deflate, br");
@@ -129,9 +128,16 @@ public class SumPagesGetter {
         request.addHeader("sec-fetch-mode","no-cors");
         request.addHeader("sec-fetch-site","same-origin");
         request.addHeader("user-agent",HeadersValueKeeper.USER_AGENT);
+
+
+
+
+
+
         try {
-            CloseableHttpResponse resp = httpClient.execute(request, context);
-            resp.close();
+          //  CloseableHttpResponse resp = httpClient.execute(request, context);
+            HttpResponse resp = httpClient.execute(request, context);
+           // resp.close();
         } catch (IOException e) {
             logger.error("couldn't execute request");
         }
@@ -147,8 +153,9 @@ public class SumPagesGetter {
         }
     }
 
-    private CloseableHttpResponse getResponse(HttpGet request) {
-        CloseableHttpResponse result = null;
+    private HttpResponse getResponse(HttpGet request) {
+     //   CloseableHttpResponse result = null;
+      HttpResponse result = null;
         try {
             result = httpClient.execute(request, context);
         } catch (IOException e) {
@@ -179,25 +186,24 @@ public class SumPagesGetter {
         request.addHeader("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9");
         request.addHeader("accept-encoding", "gzip, deflate, br");
         request.addHeader("accept-language", "ru-RU,ru;q=0.9");
-        request.addHeader("sec-ch-ua", "Chromium\";v=\"88\", \"Google Chrome\";v=\"88\", \";Not A Brand\";v=\"99");
+        request.addHeader("sec-ch-ua", "\" Not;A Brand\";v=\"99\", \"Google Chrome\";v=\"91\", \"Chromium\";v=\"91\"");
         request.addHeader("sec-ch-ua-mobile", "?0");
         request.addHeader("sec-fetch-dest", "document");
         request.addHeader("sec-fetch-mode", "navigate");
         request.addHeader("sec-fetch-site", "none");
         request.addHeader("sec-fetch-user", "?1");
         request.addHeader("upgrade-insecure-requests", "1");
-        request.addHeader(HttpHeaders.USER_AGENT, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36");
+        request.addHeader(HttpHeaders.USER_AGENT, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36");
     }
 
 
     public SumPagesGetter() {
-        /*HttpHost proxy = new HttpHost("103.214.46.60", 12334, "https");
+        HttpHost proxy = new HttpHost("51.38.82.244", 443);
         DefaultProxyRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxy);
          httpClient = HttpClients.custom()
                 .setRoutePlanner(routePlanner)
                 .build();
-*/
-      httpClient = HttpClients.createDefault();
+    //  httpClient = HttpClients.createDefault();
       context = null;
     }
 
@@ -209,7 +215,7 @@ public class SumPagesGetter {
         this.context = context;
     }
 
-    public CloseableHttpClient getHttpClient() {
+    public HttpClient getHttpClient() {
         return httpClient;
     }
 

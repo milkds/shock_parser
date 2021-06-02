@@ -1,6 +1,7 @@
 package parser.summit;
 
 import org.apache.http.Header;
+import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.protocol.HttpClientContext;
@@ -20,7 +21,7 @@ public class SummitDistilHandler {
         this.url = url;
     }
 
-    public String handleDistil(CloseableHttpResponse response, String pageCode) {
+    public String handleDistil(HttpResponse response, String pageCode) {
         printHeaders(response);
         String firstEntity = doFirstStep(pageCode);
         String secondEntity = doSecondStep(firstEntity);
@@ -51,15 +52,16 @@ public class SummitDistilHandler {
         request.addHeader("user-agent",HeadersValueKeeper.USER_AGENT);
 
         getter.getContext().setAttribute(HttpClientContext.COOKIE_STORE, new BasicCookieStore());
-        CloseableHttpResponse response = getResponse(request);
+        //CloseableHttpResponse response = getResponse(request);
+       HttpResponse response = getResponse(request);
         String entity = getter.getPageFromResponse(response);
       //  System.out.println(entity);
 
         return entity;
     }
 
-    private CloseableHttpResponse getResponse(HttpGet request) {
-        CloseableHttpResponse response = null;
+    private HttpResponse getResponse(HttpGet request) {
+        HttpResponse response = null;
         try {
             response = getter.getHttpClient().execute(request, getter.getContext());
         } catch (IOException e) {
@@ -69,7 +71,7 @@ public class SummitDistilHandler {
         return response;
     }
 
-    private void printHeaders(CloseableHttpResponse response) {
+    private void printHeaders(HttpResponse response) {
         Header[] headers = response.getAllHeaders();
         for (Header header: headers){
             System.out.println(header.getName() + " : " + header.getValue());
