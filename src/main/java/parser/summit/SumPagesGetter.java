@@ -112,10 +112,12 @@ public class SumPagesGetter {
     }
 
     private void sendFirstRequest(CloseableHttpResponse response, String url, String pageCode) {
-        String scriptUrl = new SummitPageReader(pageCode).getHeadScriptName();
+       /* String scriptUrl = new SummitPageReader(pageCode).getHeadScriptName();
+        logger.info("Script name = " + scriptUrl);
         if (scriptUrl.length()==0){
             return;
-        }
+        }*/
+       String scriptUrl = "/Alarums-Exeunter-Hath-Brese-Banq-Wheth-frangerd-";
         HttpGet request = new HttpGet("https://www.summitracing.com"+scriptUrl);
         request.addHeader("accept","*/*");
         request.addHeader("accept-encoding","gzip, deflate, br");
