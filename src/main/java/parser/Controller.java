@@ -3,6 +3,7 @@ package parser;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
 import parser.summit.SummitController;
+import parser.utils.TestUtil;
 
 import java.io.IOException;
 
@@ -13,9 +14,11 @@ public class Controller {
 
      //   new SummitController().printParts();
         //new SummitController().getParts("https://www.summitracing.com/int/search/brand/moog-chassis-parts/product-line/moog-replacement-coil-springs/part-type/coil-springs?GridPageSize=96&PageRollup=ProductName&PageSize=100&SortBy=Default&SortOrder=Default&fr=part-type");
-       new SummitController().getItemPages("moog");
+    //   new SummitController().getItemPages("moog");
      // new SummitController().checkParseConsistency("ome");
     //    new SummitController().saveItemsToDB("ome");
+
+        new TestUtil().testProxyHttpClient();
     }
 
 
