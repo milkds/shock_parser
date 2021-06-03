@@ -36,6 +36,7 @@ public class SumPagesGetter {
         HttpResponse response = getResponse(request);
         result = processResponse(response, url);
         logger.info("Got page " + url);
+        request.releaseConnection();
 
         return result;
     }
@@ -137,6 +138,7 @@ public class SumPagesGetter {
         try {
           //  CloseableHttpResponse resp = httpClient.execute(request, context);
             HttpResponse resp = httpClient.execute(request, context);
+            request.releaseConnection();
            // resp.close();
         } catch (IOException e) {
             logger.error("couldn't execute request");
@@ -198,12 +200,12 @@ public class SumPagesGetter {
 
 
     public SumPagesGetter() {
-        HttpHost proxy = new HttpHost("51.38.82.244", 443);
+        HttpHost proxy = new HttpHost("185.169.198.98", 3128);
         DefaultProxyRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxy);
          httpClient = HttpClients.custom()
                 .setRoutePlanner(routePlanner)
                 .build();
-    //  httpClient = HttpClients.createDefault();
+     // httpClient = HttpClients.createDefault();
       context = null;
     }
 
