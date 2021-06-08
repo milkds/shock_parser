@@ -36,7 +36,7 @@ public class SummitPageReader {
         }
         Element first = results.first();
         String uniTxt = getUniTxt(first);
-        logger.info("uniText "+uniTxt);
+        logger.debug("uniText "+uniTxt);
         if (uniTxt.contains("Universal")){
             return uniTxt.contains("Yes");
         }

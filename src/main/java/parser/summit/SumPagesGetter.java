@@ -200,12 +200,12 @@ public class SumPagesGetter {
 
 
     public SumPagesGetter() {
-        HttpHost proxy = new HttpHost("185.169.198.98", 3128);
+     /*   HttpHost proxy = new HttpHost("185.169.198.98", 3128);
         DefaultProxyRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxy);
          httpClient = HttpClients.custom()
                 .setRoutePlanner(routePlanner)
-                .build();
-     // httpClient = HttpClients.createDefault();
+                .build();*/
+      httpClient = HttpClients.createDefault();
       context = null;
     }
 
