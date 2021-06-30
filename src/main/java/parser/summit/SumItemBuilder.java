@@ -285,7 +285,14 @@ class SumItemBuilder {
 
     private void getPrice(Document doc) {
         Element priceEl = doc.getElementsByClass("price").first();
-        String priceT = priceEl.text();
+        String priceT = "";
+        try{
+           priceT = priceEl.text();
+       }
+       catch (NullPointerException e){
+           result.setPrice(new BigDecimal(0));
+           return;
+       }
         priceT = priceT.replace("$", "");
         priceT = priceT.replace(",", "");
         BigDecimal price = new BigDecimal(Double.parseDouble(priceT));

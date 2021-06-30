@@ -38,7 +38,9 @@ public class SumPagesGetter {
         HttpGet request = getBasicGetRequest(url);
         prepareContext();
        // CloseableHttpResponse response = getResponse(request);
+//        logger.info("getting resp");
         HttpResponse response = getResponse(request);
+      //  logger.info("got rest");
         result = processResponse(response, url);
         logger.info("Got page " + url);
         request.releaseConnection();

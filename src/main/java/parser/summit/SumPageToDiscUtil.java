@@ -7,6 +7,8 @@ import parser.utils.BasicUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.MalformedInputException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -150,7 +152,16 @@ class SumPageToDiscUtil {
         Path fPath = Path.of(fileName);
         try {
             result = Files.readString(fPath);
-        } catch (Exception e) {
+        }
+        catch (MalformedInputException e1){
+           try {
+               result = Files.readString(fPath, Charset.forName("windows-1251"));
+           }
+           catch (IOException e2){
+               e2.printStackTrace();
+           }
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
 

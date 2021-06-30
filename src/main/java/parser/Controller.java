@@ -19,10 +19,10 @@ public class Controller {
         //new SumPartGetter().printPartsForKeystone();
 
      //   new SummitController().printParts();
-        //new SummitController().getParts("https://www.summitracing.com/int/search/brand/moog-chassis-parts/product-line/moog-replacement-coil-springs/part-type/coil-springs?GridPageSize=96&PageRollup=ProductName&PageSize=100&SortBy=Default&SortOrder=Default&fr=part-type");
+        new SummitController().getParts("https://www.summitracing.com/int/search/brand/koni?SortBy=Default&SortOrder=Ascending&GroupBy=SKU&PageSize=100");
   //     new SummitController().getItemPages("moog");
      // new SummitController().checkParseConsistency("ome");
-       new SummitController().saveItemsToDB("moog");
+   //    new SummitController().saveItemsToDB("moog");
 
        // new TestUtil().testProxyHttpClient();
     }
