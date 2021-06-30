@@ -156,14 +156,15 @@ public class SummitController {
         List<String> parts = getPartsForParse(sumSession);
         logger.info("Got parts for parse. Total quantity is " + parts.size());
         SumPageToDiscUtil saver = new SumPageToDiscUtil(brand);
-        getPartsPages(parts, saver, sumSession);
+        getPartsPages(parts, saver, sumSession, brand);
         sumSession.close();
         HibernateUtil.shutdown();
     }
 
-    private void getPartsPages(List<String> parts, SumPageToDiscUtil saver, Session sumSession) {
+    private void getPartsPages(List<String> parts, SumPageToDiscUtil saver, Session sumSession, String brand) {
         int counter = 0;
         int total = parts.size();
+        boolean hasSavedFits = true;
         SumPagesGetter getter = new SumPagesGetter();
         for (String part: parts){
             String url = "https://www.summitracing.com/int/parts/"+part;
@@ -171,7 +172,14 @@ public class SummitController {
             String urlHTML = getter.getValidPageNoRef(url);
             randomSleep();
             if (hasApplications(urlHTML)){
-                saveFitPages(getter, url, saver);
+                if (hasSavedFits){
+                   int startFit = new SumPageToDiscUtil(brand).getStartFit(part);
+                    saveFitPages(getter, url, saver, startFit);
+                    hasSavedFits = false;
+                }
+               else{
+                   saveFitPages(getter, url, saver, 2);
+                }
             }
             saver.savePage(url, urlHTML);
             counter++;
@@ -191,7 +199,7 @@ public class SummitController {
         return el!=null;
     }
 
-    private void saveFitPages(SumPagesGetter getter, String url, SumPageToDiscUtil saver) {
+    private void saveFitPages(SumPagesGetter getter, String url, SumPageToDiscUtil saver, int startFit) {
         String appUrl = url+"/applications";
         String appPage = getter.getValidPage(appUrl);
         saver.savePage(appUrl, appPage);
@@ -205,7 +213,7 @@ public class SummitController {
         }
         int totalPages = getTotalPages(totalResults);
         logger.info("Total fit pages "+ totalPages);
-        for (int i = 2; i <= totalPages; i++) {
+        for (int i = startFit; i <= totalPages; i++) {
             randomSleep();
             String curUrl = appUrl+"?page="+i;
             String currentPage = getter.getValidPage(curUrl);

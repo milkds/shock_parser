@@ -20,6 +20,7 @@ import java.util.List;
 
 public class SumPagesGetter {
     private static final Logger logger = LogManager.getLogger(SumPagesGetter.class.getName());
+    private int counter = 0;
 
 
     private HttpClient httpClient;
@@ -29,6 +30,10 @@ public class SumPagesGetter {
 
 
     public String getValidPage(String url){
+        if (counter>50){
+           restartClient();
+           counter=0;
+        }
         String result = "";
         HttpGet request = getBasicGetRequest(url);
         prepareContext();
@@ -37,8 +42,16 @@ public class SumPagesGetter {
         result = processResponse(response, url);
         logger.info("Got page " + url);
         request.releaseConnection();
+        counter++;
 
         return result;
+    }
+
+    private void restartClient() {
+        //continue here
+        httpClient = HttpClients.createDefault();
+        context = null;
+        referer = "";
     }
 
     private void setCookies(HttpGet request) {

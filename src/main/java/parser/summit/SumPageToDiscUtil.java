@@ -25,6 +25,41 @@ class SumPageToDiscUtil {
         checkDir(brand);
     }
 
+    public  int getStartFit(String part) {
+        Map<String, List<String>> fNames = getFileNamesForBrand();
+        List<String> fits = new ArrayList<>();
+        for (Map.Entry<String, List<String>> entry : fNames.entrySet()) {
+            String k = entry.getKey();
+            List<String> v = entry.getValue();
+            if (k.contains(part)) {
+                String s = StringUtils.substringBefore(k, ".txt");
+                if (part.equals(s)) {
+                  fits = v;
+                    break;
+                }
+            }
+        }
+        if (fits.size()==0){
+            return 2;
+        }
+        int lastFit = getLastFit(fits);
+
+        return lastFit+1;
+    }
+
+    private int getLastFit(List<String> fits) {
+        int result = 0;
+        for (String fit: fits){
+            String fitNo = StringUtils.substringBetween(fit, "_fit", ".txt");
+            int curFitNo = Integer.parseInt(fitNo);
+            if (result<curFitNo){
+                result = curFitNo;
+            }
+        }
+
+        return result;
+    }
+
     private void checkDir(String brand) {
         String fName = PATH+brand;
         try {
@@ -93,10 +128,15 @@ class SumPageToDiscUtil {
         Map<String, List<String>> result = new HashMap<>();
         fNames.forEach(fName->{
             if (!fName.contains("fit")){
-                result.put(fName, new ArrayList<>());
+                if (!result.containsKey(fName)){
+                    result.put(fName, new ArrayList<>());
+                }
             }
             else {
                 String key = StringUtils.substringBefore( fName,"_fit")+".txt";
+                if (!result.containsKey(key)){
+                    result.put(key, new ArrayList<>());
+                }
                 result.get(key).add(fName);
             }
         });
