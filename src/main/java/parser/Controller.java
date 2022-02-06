@@ -19,10 +19,10 @@ public class Controller {
         //new SumPartGetter().printPartsForKeystone();
 
      //   new SummitController().printParts();
-        new SummitController().getParts("https://www.summitracing.com/int/search/brand/koni?SortBy=Default&SortOrder=Ascending&GroupBy=SKU&PageSize=100");
-  //     new SummitController().getItemPages("moog");
-     // new SummitController().checkParseConsistency("ome");
-   //    new SummitController().saveItemsToDB("moog");
+   //     new SummitController().getParts("https://www.summitracing.com/int/search/brand/gabriel?GroupBy=SKU&N=part-type%3Ashock-and-strut-components_strut-mounts_steering-stabilizers_shock-bushings_shock-boots-and-bellows_shock-mount-replacement-components_air-shock-fill-valves_air-shocks-fill-hoses_strut-bellow-kits&PageSize=100&SortBy=Default&SortOrder=Ascending");
+    //   new SummitController().getItemPages("gabriel");
+     // new SummitController().checkParseConsistency("gabriel");
+       new SummitController().saveItemsToDB("gabriel");
 
        // new TestUtil().testProxyHttpClient();
     }

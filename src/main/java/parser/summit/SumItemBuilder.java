@@ -301,10 +301,10 @@ class SumItemBuilder {
 
     private void getTitle(Document doc) {
         Element titleEl = doc.getElementsByAttributeValueStarting("class", "part-detail-title").first();
-        /*if (titleEl==null){
+        if (titleEl==null){
             System.out.println(doc.toString());
             System.exit(1);
-        }*/
+        }
        // titleEl = titleEl.getElementsByClass("title").first();
         result.setTitle(titleEl.text());
         logger.debug("Building " + result.getTitle());

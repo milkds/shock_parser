@@ -19,7 +19,7 @@ import java.util.Map;
 
 class SumPageToDiscUtil {
     private String brand;
-    private static final String PATH = "c:/pages/";
+    private static final String PATH = "c:/home/pages/";
     private static final Logger logger = LogManager.getLogger(SumPageToDiscUtil.class.getName());
 
     SumPageToDiscUtil(String brand) {

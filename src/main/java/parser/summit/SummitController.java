@@ -42,6 +42,7 @@ public class SummitController {
     private void saveItems(List<SumItem> items) {
         logger.info("Items Saved");
         Session session = HibernateUtil.getSummitSessionFactory().openSession();
+        items = SummitService.skipSavedItems(items, session);
         items.forEach(item->{
             new SummitService().saveItem(item, session);
         });

@@ -16,6 +16,18 @@ import java.util.List;
 public class SumDAO {
 
 
+    public static List<String> getSavedItemsPartNos(Session session) {
+        List<String> result = new ArrayList<>();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<String> crQ = builder.createQuery(String.class);
+        Root<SumItem> root = crQ.from(SumItem.class);
+        crQ.select(root.get("partNo")).distinct(true);
+        Query q = session.createQuery(crQ);
+        result = q.getResultList();
+
+        return result;
+    }
+
     public void savePageToDB(SumPage page, Session sumSession) {
         Transaction transaction = null;
         try {

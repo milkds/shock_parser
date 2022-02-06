@@ -21,6 +21,7 @@ import java.util.List;
 public class SumPagesGetter {
     private static final Logger logger = LogManager.getLogger(SumPagesGetter.class.getName());
     private int counter = 0;
+    private int stop_counter = 0;
 
 
     private HttpClient httpClient;
@@ -45,6 +46,10 @@ public class SumPagesGetter {
         logger.info("Got page " + url);
         request.releaseConnection();
         counter++;
+        stop_counter++;
+        if (stop_counter>500){
+            System.exit(1);
+        }
 
         return result;
     }
