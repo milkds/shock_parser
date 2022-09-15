@@ -77,7 +77,7 @@ public class SileniumUtil {
             if (attempts==10){
                 throw new TimeoutException();
             }
-            sleepForMS(1000);
+            sleepForMS(10000);
         }
 
     }

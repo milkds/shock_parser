@@ -3,6 +3,7 @@ package parser;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
 import org.apache.commons.lang3.StringUtils;
+import parser.fox.FoxSiteSurfer;
 import parser.summit.SummitController;
 import parser.utils.BasicUtils;
 import parser.utils.TestUtil;
@@ -14,19 +15,23 @@ import java.util.Set;
 
 public class Controller {
     public static void main(String[] args) throws InterruptedException, TesseractException, IOException {
-     //   new Controller().processInput();
+    /* //   new Controller().processInput();
         //new EibachController().processParsedPages();
         //new SumPartGetter().printPartsForKeystone();
 
      //   new SummitController().printParts();
-   //     new SummitController().getParts("https://www.summitracing.com/int/search/brand/gabriel?GroupBy=SKU&N=part-type%3Ashock-and-strut-components_strut-mounts_steering-stabilizers_shock-bushings_shock-boots-and-bellows_shock-mount-replacement-components_air-shock-fill-valves_air-shocks-fill-hoses_strut-bellow-kits&PageSize=100&SortBy=Default&SortOrder=Ascending");
-    //   new SummitController().getItemPages("gabriel");
-     // new SummitController().checkParseConsistency("gabriel");
-       new SummitController().saveItemsToDB("gabriel");
 
-       // new TestUtil().testProxyHttpClient();
+        // new SummitController().checkParseConsistency("gabriel");
+        //   new SummitController().saveItemsToDB("gabriel");
+
+        // new TestUtil().testProxyHttpClient();
+
+        // FoxSiteSurfer.parseSite();*/
+
+      new SummitController().getItemPages("Superlift Suspension");
+       //      new SummitController().getParts("https://www.summitracing.com/int/search/brand/fox-racing-shox-truck-offroad/product-line/fox-racing-shox-2-0-performance-series-ifp-steering-stabilizers/part-type/steering-stabilizers?fr=part-type&SortBy=Default&SortOrder=Ascending&PageRollup=ProductName");
+   //   new SummitController().clearBlankPages("Superlift Suspension");
     }
-
 
     private void tessTest(){
         Tesseract tesseract = new Tesseract();

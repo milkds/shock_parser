@@ -38,7 +38,7 @@ public class FoxItem {
     @Column(name = "ITEM_PRICE")
     private String price;
 
-    @ManyToMany(cascade = { CascadeType.ALL })
+    @ManyToMany(cascade = CascadeType.ALL )
     @JoinTable(
             name = "items_specs_link",
             joinColumns = { @JoinColumn(name = "ITEM_ID") },

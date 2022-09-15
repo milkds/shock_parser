@@ -16,13 +16,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-class SumPageToDiscUtil {
+public class SumPageToDiscUtil {
     private String brand;
     private static final String PATH = "c:/home/pages/";
     private static final Logger logger = LogManager.getLogger(SumPageToDiscUtil.class.getName());
 
-    SumPageToDiscUtil(String brand) {
+   public SumPageToDiscUtil(String brand) {
         this.brand = brand;
         checkDir(brand);
     }
@@ -196,5 +198,27 @@ class SumPageToDiscUtil {
         logger.info("pages read");
 
         return result;
+    }
+
+    public List<String> getBlankPagesNames() {
+        List<File> allFiles = getAllFilesForBrand();
+        List<String> result = new ArrayList<>();
+        allFiles.forEach(file -> {
+            String fName = file.getName();
+            if (!fName.contains("fit")){
+                long fSize = file.length()/1024;
+                if (fSize<5){
+                    result.add(fName);
+                }
+            }
+        });
+
+        return result;
+    }
+
+    private List<File> getAllFilesForBrand() {
+       return Stream.of(new File(PATH+brand).listFiles())
+               .filter(file -> !file.isDirectory())
+               .collect(Collectors.toList());
     }
 }

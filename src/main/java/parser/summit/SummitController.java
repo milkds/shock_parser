@@ -8,6 +8,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import parser.summit.entities.SumItem;
 import parser.summit.entities.SumPage;
+import parser.summit.sumutils.SumBlankPageChecker;
 import parser.utils.BasicUtils;
 import parser.utils.HibernateUtil;
 
@@ -190,6 +191,7 @@ public class SummitController {
             new SummitService().savePageToDB(page, sumSession);
             logger.info("Saved page " + counter + " of total " + total);
             randomSleep();
+            getter.restartClient();
         }
     }
 
@@ -241,4 +243,7 @@ public class SummitController {
     }
 
 
+    public void clearBlankPages(String brand) {
+        new SumBlankPageChecker().clearPagesFromDB(brand);
+    }
 }

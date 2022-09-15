@@ -24,12 +24,12 @@ public class MakeParser {
     private By makeBy; //this needed in case fox changes site code
     private int year;
 
-    public void parseMake() {
+    public void parseMake(Session session) {
         String modelElementID = "shockfinder-model";
         By modelBy = By.id(modelElementID);
         SileniumUtil.selectOptionByOptionID(makeID, makeBy, driver); //selecting make at make dropDown
         SileniumUtil.waitForSelectBy(driver, modelBy); //waiting for model dropdown to become active
-        Session session = HibernateUtil.getFoxSessionFactory().openSession();
+     //   Session session = HibernateUtil.getFoxSessionFactory().openSession();
         int attempts = 0;
         Set<FoxCar> makeCars = null;
         while (true){
@@ -47,7 +47,7 @@ public class MakeParser {
         }
 
         FoxDBService.saveCars(makeCars, session);
-        session.close();
+
     }
 
     private Set<FoxCar> checkAllModels(By modelBy, Session session) {

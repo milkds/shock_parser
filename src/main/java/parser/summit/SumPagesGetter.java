@@ -54,7 +54,7 @@ public class SumPagesGetter {
         return result;
     }
 
-    private void restartClient() {
+    public void restartClient() {
         //continue here
         httpClient = HttpClients.createDefault();
         context = null;
@@ -141,7 +141,7 @@ public class SumPagesGetter {
         HttpGet request = new HttpGet("https://www.summitracing.com"+scriptUrl);
         request.addHeader("accept","*/*");
         request.addHeader("accept-encoding","gzip, deflate, br");
-        request.addHeader("accept-language","ru-RU,ru;q=0.9");
+        request.addHeader("accept-language","en-US,en;q=0.9");
         request.addHeader("referer",url);
         request.addHeader("sec-ch-ua",HeadersValueKeeper.SEC_CH_UA);
         request.addHeader("sec-ch-ua-mobile","?0");
@@ -149,9 +149,6 @@ public class SumPagesGetter {
         request.addHeader("sec-fetch-mode","no-cors");
         request.addHeader("sec-fetch-site","same-origin");
         request.addHeader("user-agent",HeadersValueKeeper.USER_AGENT);
-
-
-
 
 
 
@@ -207,15 +204,16 @@ public class SumPagesGetter {
     private void addBasicHeaders(HttpGet request) {
         request.addHeader("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9");
         request.addHeader("accept-encoding", "gzip, deflate, br");
-        request.addHeader("accept-language", "ru-RU,ru;q=0.9");
-        request.addHeader("sec-ch-ua", "\" Not;A Brand\";v=\"99\", \"Google Chrome\";v=\"91\", \"Chromium\";v=\"91\"");
+        request.addHeader("accept-language", "en-US,en;q=0.9");
+        request.addHeader("sec-ch-ua", "\" Not;A Brand\";v=\"99\", \"Google Chrome\";v=\"99\", \"Chromium\";v=\"99\"");
         request.addHeader("sec-ch-ua-mobile", "?0");
+        request.addHeader("sec-ch-ua-platform", "Windows");
         request.addHeader("sec-fetch-dest", "document");
         request.addHeader("sec-fetch-mode", "navigate");
         request.addHeader("sec-fetch-site", "none");
         request.addHeader("sec-fetch-user", "?1");
         request.addHeader("upgrade-insecure-requests", "1");
-        request.addHeader(HttpHeaders.USER_AGENT, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36");
+        request.addHeader(HttpHeaders.USER_AGENT, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36");
     }
 
 

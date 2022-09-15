@@ -51,4 +51,19 @@ public class FoxItemDAO {
             }
         }
     }
+
+    public static void updateItem(FoxItem item, Session session) {
+        Transaction transaction = null;
+        try {
+            transaction = session.getTransaction();
+            transaction.begin();
+            session.update(item);
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }
+    }
 }

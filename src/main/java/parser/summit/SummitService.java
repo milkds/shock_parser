@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-class SummitService {
+public class SummitService {
     static List<String> getParsedParts(Session sumSession) {
         List<String> result = new SumDAO().getAllPagesParts(sumSession);
 
@@ -27,6 +27,14 @@ class SummitService {
         });
 
         return result;
+    }
+
+    public static List<SumPage> getAllPages(Session session) {
+        return SumDAO.getAllPages(session);
+    }
+
+    public static void deletePages(Set<SumPage> pagesToDelete, Session session) {
+        SumDAO.deletePages(pagesToDelete, session);
     }
 
     void savePageToDB(SumPage page, Session sumSession) {

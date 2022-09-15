@@ -67,13 +67,23 @@ public class FoxDBService {
             if (item.getItemID()==0){
                 try {
                     item = FoxItemDAO.getItemByPartNo(session, item.getPartNo());
+                    item.getFitments().add(foxFit);
+                    updateItem(item, session);
                 }
                 catch (NoResultException e){
                     saveItem(item, session);
+                    foxFit.setItem(item);
                 }
 
             }
+            else {
+                updateItem(item, session);
+            }
         });
+    }
+
+    private static void updateItem(FoxItem item, Session session) {
+        FoxItemDAO.updateItem(item, session);
     }
 
     public static StartPoint getStartPoint() {

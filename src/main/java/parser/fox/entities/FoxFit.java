@@ -1,5 +1,7 @@
 package parser.fox.entities;
 
+import org.hibernate.engine.internal.Cascade;
+
 import javax.persistence.*;
 
 @Entity

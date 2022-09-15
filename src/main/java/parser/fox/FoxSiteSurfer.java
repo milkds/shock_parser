@@ -2,6 +2,7 @@ package parser.fox;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.Session;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
@@ -9,6 +10,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.Select;
 import parser.fox.parsers.MakeParser;
+import parser.utils.HibernateUtil;
 import parser.utils.RunUtil;
 import parser.utils.SileniumUtil;
 
@@ -23,6 +25,7 @@ public class FoxSiteSurfer {
     }
 
     private static void launchParse(WebDriver driver, StartPoint startPoint) {
+        Session session = HibernateUtil.getFoxSessionFactory().openSession();
         String yearElemID = "shockfinder-year";
         int yearID = getElementIDByID(yearElemID, driver, startPoint.getYear());
         if (yearID<2){
@@ -58,7 +61,7 @@ public class FoxSiteSurfer {
                 int attempts = 0;
                 while (true){
                     try {
-                        new MakeParser(j, driver, makeBy, year).parseMake();
+                        new MakeParser(j, driver, makeBy, year).parseMake(session);
                         break;
                     }
                     catch (TimeoutException e){
@@ -71,7 +74,7 @@ public class FoxSiteSurfer {
             }
             makeID = 1;
         }
-
+        session.close();
 
     }
 

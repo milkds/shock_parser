@@ -12,6 +12,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class SumDAO {
 
@@ -26,6 +27,32 @@ public class SumDAO {
         result = q.getResultList();
 
         return result;
+    }
+
+    public static List<SumPage> getAllPages(Session session) {
+        List<SumPage> result = new ArrayList<>();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<SumPage> crQ = builder.createQuery(SumPage.class);
+        Root<SumPage> root = crQ.from(SumPage.class);
+        Query q = session.createQuery(crQ);
+        result = q.getResultList();
+
+        return result;
+    }
+
+    public static void deletePages(Set<SumPage> pagesToDelete, Session session) {
+        Transaction transaction = null;
+        try {
+            transaction = session.getTransaction();
+            transaction.begin();
+            pagesToDelete.forEach(session::delete);
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }
     }
 
     public void savePageToDB(SumPage page, Session sumSession) {
